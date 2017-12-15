@@ -6,20 +6,14 @@
 #include <stdio.h>
 
 
-typedef struct s_node
+typedef struct      s_node
 {
-    char *name;
-    int x;
-    int y;
-    int status;
-    char *next;
-}               t_node;
-
-typedef struct  s_map
-{
-    int     num_of_ants;
-}               t_map;
-
-
+    char            *name;
+    int             status;
+    int             x;
+    int             y;
+    int             *links;
+    struct s_node   *next;
+}                   t_node;
 
 #endif //LEM_IN_LEMIN_H
