@@ -5,12 +5,6 @@
 #include "libft/includes/get_next_line.h"
 #include <stdio.h>
 
-typedef struct      s_link
-{
-    char            *name;
-    struct s_link   *next;
-}                   t_links;
-
 typedef struct      s_node
 {
     char            *name;

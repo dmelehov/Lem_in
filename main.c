@@ -37,11 +37,11 @@ void    error_mngr(int er_num)
     else if (er_num == 5)
         write(1, "Wrong argument set as a input parametr\n", 39);
     else if (er_num == 6)
-        write(1, "There can be only one start and end\n", 36);
+        write(1, "There must be one start and one end\n", 36);
     else if (er_num == 7)
         write(1, "There must be a room after command\n", 35);
     else if (er_num == 8)
-        write(1, "Wrong input sequence\n", 35);
+        write(1, "Wrong input sequence\n", 21);
     else if (er_num == 9)
         write(1, "Room with a current name allready exist\n", 40);
     else if (er_num == 10)
@@ -70,14 +70,10 @@ int     check_num_str(char *line)
 
 t_node     *check_name(t_node *node, char *s) //problematic function
 {
-//    write(1, "SRAV6\n", 6);
-//    printf("{%d|%d}", node->x, node->y);
     while (node)
     {
-//        write(1, "SRAV3\n", 6);
-        if (/*node->name == NULL || */!ft_strcmp(s, node->name))
+        if (ft_strequ(s, node->name))
             return (node);
-//        write(1, "SRAV4\n", 6);
         node = node->next;
     }
     return (NULL);
@@ -87,18 +83,19 @@ void    get_links(t_node *node, char *str)
 {
     t_node *lst;
 
-    lst = node->link;
-//    write(1, "SRAV4\n", 6);
-    if (!check_name(lst, str))
+    if (node->link == NULL)
     {
-//        write(1, "SRAV5\n", 6);
-        lst = get_next_node(lst);
-//        write(1, "SRAV6\n", 6);
+        node->link = (t_node *)malloc(sizeof(t_node));
+        *(node->link) = (t_node){NULL, 0, 0, NULL, NULL};
+        node->link->name = ft_strdup(str);
+    }
+    else if (!check_name(node->link, str))
+    {
+        lst = get_next_node(node->link);
         lst->name = ft_strdup(str);
     }
     else
         error_mngr(11);
-
 }
 
 void    check_links(t_node *node, char *s)
@@ -107,7 +104,6 @@ void    check_links(t_node *node, char *s)
     char **arr;
     int  i;
 
-//    write(1, "SRAV2\n", 6);
     arr = ft_strsplit(s, '-');
     i = 0;
     while (arr[i])
@@ -116,89 +112,63 @@ void    check_links(t_node *node, char *s)
         error_mngr(10);
     if (!check_name(node, arr[0]) || !check_name(node, arr[1]))
         error_mngr(10);
-//    write(1, "SRAV3\n", 6);
     get_links(check_name(node, arr[0]), arr[1]);
-
     get_links(check_name(node, arr[1]), arr[0]);
 }
 
 t_node  *get_next_node(t_node *node)
 {
-//    write(1, "SRAV6\n", 6);
-    if (node == NULL)
-    {
-//        write(1, "SRAV7\n", 6);
-        node = (t_node *)malloc(sizeof(t_node));
-        *node = (t_node){"", 0, 0, NULL, NULL};
-        return (node);
-    }
-    while (node->next != NULL) {
-//        write(1, "SRAV8\n", 6);
+    while (node->next != NULL)
         node = node->next;
-    }
     node->next = (t_node *)malloc(sizeof(t_node));
     node = node->next;
-    *node = (t_node){"", 0, 0, NULL, NULL};
+    *node = (t_node){NULL, 0, 0, NULL, NULL};
     return (node);
 }
 
-int     ft_get_input(char *line, t_node *node)
+int      ft_get_ants_num(char *line, t_status *status)
+{
+    status->ant_num = check_num_str(line);
+    if (status->ant_num <= 0)
+        error_mngr(1);
+    return (1);
+}
+
+int     ft_get_room_data(char **arr, t_node *node)
+{
+    if (check_name(node, arr[0]))
+        error_mngr(9);
+    if (node->name != NULL)
+        node = get_next_node(node);
+    node->name = ft_strdup(arr[0]);
+    node->x = check_num_str(arr[1]);
+    node->y = check_num_str(arr[2]);
+    return (3);
+}
+
+int     ft_get_links_data(char **arr, t_node *node)
+{
+    check_links(node, arr[0]);
+    return (5);
+}
+
+int     ft_get_input(char *line, t_node *node, t_status *status)
 {
     char **s;
     int i;
 
+    if (status->cur_input_type == 0)
+        return (ft_get_ants_num(line, status));
     i = 0;
     s = ft_strsplit(line, 32);
     while (s[i])
         i++;
-    if (i != 1 && i != 3)
+    if (i == 3 && status->cur_input_type <= 3)
+        return (ft_get_room_data(s, node));
+    else if (i == 1 && status->cur_input_type >= 3)
+        return (ft_get_links_data(s, node));
+    else if (i != 1 && i != 3)
         error_mngr(5);
-    if (i == 3)
-    {
-//        write(1, "SRAV\n", 5);
-        if (check_name(node, s[0]))
-            error_mngr(9);
-//        write(1, "SRAV2\n", 6);
-        node = get_next_node(node);
-//        write(1, "SRAV3\n", 6);
-        node->name = ft_strdup(s[0]);
-        node->x = check_num_str(s[1]);
-        node->y = check_num_str(s[2]);
-    }
-    else if (i == 1)
-    {
-//        write(1, "SRAV\n", 5);
-        check_links(node, s[0]);
-//        write(1, "SRAV9\n", 6);
-        i = 5;
-    }
-//    printf("%d\n", i);
-    return (i);
-}
-
-int  ft_check_comand(char *line, t_status *status)
-{
-    if (!ft_strcmp(line + 2, "start"))
-    {
-        if (status->start_exist == 0)
-        {
-            status->start_exist = 1;
-            return (1);
-        }
-        else
-            error_mngr(6);
-    }
-    else if (!ft_strcmp(line + 2, "end"))
-    {
-        if (status->end_exist == 0)
-        {
-            status->end_exist = 1;
-            return (2);
-        }
-        else
-            error_mngr(6);
-        // return (status->end_exist == 0 ? 2 : error_mngr(6));
-    }
     return (0);
 }
 
@@ -206,67 +176,53 @@ void     ft_check_status(t_status *status, int inp_type)
 {
     if (status->cur_cmnd != 0 && inp_type != 3)
         error_mngr(7);
-    if (status->cur_input_type == 0 && inp_type == 5)
+    if (status->cur_input_type > inp_type)
         error_mngr(8);
-    else if (status->cur_input_type > inp_type)
-        error_mngr(8);
+    if (inp_type == 5 && !(status->start_exist == 1 && status->end_exist == 1))
+        error_mngr(6);
     status->cur_input_type = inp_type;
     status->cur_cmnd = 0;
 }
 
-//int     ft_validator(t_status *status, t_node *node, char *line)
-//{
-//    get_next_line(0, &line);
-//    status->ant_num = check_num_str(line);
-//    if (status->ant_num <= 0)
-//        error_mngr(1);
-//    while (get_next_line(0, &line) > 0 /*&& line[0] != '\0'*/)
-//    {
-////        printf("%s\n", line);
-//        if (line[0] == 'L')
-//            error_mngr(3);
-////        else if (line[0] != '\0')
-////            error_mngr(2);
-//        else if (line[0] == '#' && line[1] == '#')
-//            status->cur_cmnd = ft_check_comand(line, status);
-//        else if (line[0] == '#')
-//            ;
-//        else {
-//            ft_check_status(status, ft_get_input(line, node));
-//        }
-////        printf("%s\n", line);
-//    }
-//    if (!(line) /*|| line[0] == '\0'*/)
-//        error_mngr(2);
-////    printf("%d\n", ant_num);
-//    return (1);
-//}
+int  ft_check_comand(char *line, t_status *status)
+{
+    if (line[1] != '#')
+        return (0);
+    if (ft_strequ(line + 2, "start"))
+    {
+        if (status->cur_cmnd != 0)
+            error_mngr(8);
+        if (status->start_exist++ == 0)
+            return (1);
+        else
+            error_mngr(6);
+    }
+    else if (ft_strequ(line + 2, "end"))
+    {
+        if (status->cur_cmnd != 0)
+            error_mngr(8);
+        if (status->end_exist++ == 0)
+            return (2);
+        else
+            error_mngr(6);
+    }
+    return (0);
+}
 
 int     ft_validator(t_status *status, t_node *node, char *line)
 {
-    get_next_line(0, &line);
-    status->ant_num = check_num_str(line);
-    if (status->ant_num <= 0)
-        error_mngr(1);
-    while (get_next_line(0, &line) > 0 /*&& line[0] != '\0'*/)
+    while (get_next_line(0, &line) > 0)
     {
-//        printf("%s\n", line);
         if (line[0] == 'L')
             error_mngr(3);
-//        else if (line[0] != '\0')
-//            error_mngr(2);
-        else if (line[0] == '#' && line[1] == '#')
-            status->cur_cmnd = ft_check_comand(line, status);
         else if (line[0] == '#')
-            ;
-        else {
-            ft_check_status(status, ft_get_input(line, node));
-        }
-//        printf("%s\n", line);
+            status->cur_cmnd = ft_check_comand(line, status);
+        else
+            ft_check_status(status, ft_get_input(line, node, status));
+        printf("%s\n", line);
     }
-    if (!(line) /*|| line[0] == '\0'*/)
+    if (status->cur_input_type != 5 && *line == '\0')
         error_mngr(2);
-//    printf("%d\n", ant_num);
     return (1);
 }
 
@@ -282,7 +238,7 @@ int     main(void)
     status = (t_status *)malloc(sizeof(t_status));
     *status = (t_status){0, 0, 0, 0, 0};
     node = (t_node *)malloc(sizeof(t_node));
-    *node = (t_node){"", 0, 0, NULL, NULL};
+    *node = (t_node){NULL, 0, 0, NULL, NULL};
     if (ft_validator(status, node, line)) {
         ft_print_lists(node, status);
         printf("Good\n");
