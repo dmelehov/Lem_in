@@ -5,6 +5,12 @@
 #include "libft/includes/get_next_line.h"
 #include <stdio.h>
 
+typedef struct      s_path
+{
+    char            *name;
+    struct s_path   *next;
+}                   t_path;
+
 typedef struct      s_node
 {
     char            *name;
@@ -21,6 +27,8 @@ typedef struct      s_status
     int     end_exist;
     int     cur_cmnd;
     int     cur_input_type;
+    char    *start;
+    char    *end;
 }                   t_status;
 
 t_node  *get_next_node(t_node *node);
