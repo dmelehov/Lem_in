@@ -33,6 +33,7 @@ typedef struct      s_status
     char    *start;
     char    *end;
     struct s_path   *ans;
+    struct s_node   *node;
 }                   t_status;
 
 t_node  *get_next_node(t_node *node);

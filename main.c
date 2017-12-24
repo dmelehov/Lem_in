@@ -484,6 +484,123 @@ t_path     *ft_solution(t_node *node, t_node *links, t_status *status, t_path *p
 //    return (0);
 //}
 
+int     get_links_num(t_node *node, char *str)
+{
+    int i;
+    t_node *lst;
+
+    i = 0;
+    lst = (check_name(node, str))->link;
+    while (lst)
+    {
+        lst = lst->next;
+        i++;
+    }
+    return (i);
+}
+
+int     get_path_length(t_path *lst)
+{
+    int i;
+
+    i = 0;
+    while (lst)
+    {
+        lst = lst->next;
+        i++;
+    }
+    return (i);
+}
+
+t_path  *find_shortest(t_path * lst)
+{
+    int len;
+    int cur;
+    t_path *shortest;
+
+    cur = get_path_length(lst);
+    while(lst)
+    {
+        len = get_path_length(lst);
+        if (len < cur)
+        {
+            cur = len;
+            shortest = lst;
+        }
+        lst = lst->ways;
+    }
+    return (shortest);
+}
+
+int     path_is_unique(t_path * lst, t_path *cmpr)
+{
+    if (cmpr == NULL)
+        return (1);
+    cmpr = cmpr->next;
+    lst = lst->next;
+
+    while (lst->next)
+    {
+        if (was_visited(cmpr, lst->name))
+            return (0);
+        lst = lst->next;
+    }
+    return (1);
+}
+
+t_path  *find_another_shortest(t_path * lst, t_path *cmpr)
+{
+    int len;
+    int cur;
+    t_path *shortest;
+
+    cur = 666;
+    shortest = NULL;
+    while(lst)
+    {
+        if (cmpr == NULL || path_is_unique(lst, cmpr))
+        {
+            len = get_path_length(lst);
+            if (len < cur)
+            {
+                cur = len;
+                shortest = lst;
+            }
+        }
+        lst = lst->ways;
+    }
+    return (copy_path(shortest));
+}
+
+void    get_unique_paths(t_status *status, int max_start, int max_end)
+{
+    int max_path;
+//    int len;
+//    int cur;
+    t_path *shortest;
+    t_path *another;
+    
+    t_path *lst;
+
+    max_path = (max_start >= max_end ? max_end : max_start);
+    printf("{%d} | {%d} | {%d}\n", max_start, max_end, max_path);
+    lst = status->ans;
+//    cur = get_path_length(lst);
+    status->ans = NULL;
+    shortest = NULL;
+//    shortest = find_another_shortest(lst, NULL);
+//    another = find_another_shortest(lst, shortest);
+    while(max_path--)
+    {
+        add_right_path(status, find_another_shortest(lst, shortest));
+        shortest = status->ans;
+    }
+//    if (shortest)
+//        print_right_path(shortest);
+//    if (another)
+//        print_right_path(another);
+}
+
 
 int     main(void)
 {
@@ -496,7 +613,7 @@ int     main(void)
     line = NULL;
 //    ans = NULL;
     status = (t_status *)malloc(sizeof(t_status));
-    *status = (t_status){0, 0, 0, 0, 0, NULL, NULL};
+    *status = (t_status){0, 0, 0, 0, 0, NULL, NULL, NULL};
     node = (t_node *)malloc(sizeof(t_node));
     *node = (t_node){NULL, 0, 0, NULL, NULL};
     if (ft_validator(status, node, line, 0)) {
@@ -510,6 +627,15 @@ int     main(void)
     *path = (t_path){ft_strdup(status->start), NULL, NULL, NULL};
     ft_solution(node, (check_name(node, status->start))->link, status, path);
 //    ft_solution2(node, (check_name(node, status->start))->link, status, path);
+    lst = status->ans;
+    while (lst)
+    {
+//        printf("SRAV\n");
+        print_right_path(lst);
+        lst = lst->ways;
+    }
+    status->node = node;
+    get_unique_paths(status, get_links_num(node, status->start),  get_links_num(node, status->end));
     lst = status->ans;
     while (lst)
     {
