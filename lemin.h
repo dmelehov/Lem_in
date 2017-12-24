@@ -3,12 +3,15 @@
 
 #include "libft/includes/libft.h"
 #include "libft/includes/get_next_line.h"
+#include "ft_printf/ft_printf.h"
 #include <stdio.h>
 
 typedef struct      s_path
 {
     char            *name;
+    char            *from;
     struct s_path   *next;
+    struct s_path   *ways;
 }                   t_path;
 
 typedef struct      s_node
@@ -29,6 +32,7 @@ typedef struct      s_status
     int     cur_input_type;
     char    *start;
     char    *end;
+    struct s_path   *ans;
 }                   t_status;
 
 t_node  *get_next_node(t_node *node);

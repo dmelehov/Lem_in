@@ -263,16 +263,13 @@ int     ft_validator(t_status *status, t_node *node, char *line, int r)
  * LET THE GAME BEGIN!!!
  */
 
-void    add_curent_visit(t_path *lst, char *str)
+void    add_curent_visit(t_path *lst, char *str, char *str2)
 {
     while (lst->next)
-    {
-//        printf("SRAV\n");
         lst = lst->next;
-    }
     lst->next = (t_path *)malloc(sizeof(t_path));
     lst = lst->next;
-    *lst = (t_path){ft_strdup(str), NULL};
+    *lst = (t_path){ft_strdup(str), ft_strdup(str2), NULL, NULL};
 }
 
 t_path      *copy_path(t_path *path)
@@ -281,7 +278,7 @@ t_path      *copy_path(t_path *path)
     t_path *first;
 
     new = (t_path *)malloc(sizeof(t_path));
-    *new = (t_path){ft_strdup(path->name), NULL};
+    *new = (t_path){ft_strdup(path->name), NULL, NULL, NULL};
     first = new;
     path = path->next;
 //    new = new->next;
@@ -289,13 +286,13 @@ t_path      *copy_path(t_path *path)
     {
         new->next = (t_path *)malloc(sizeof(t_path));
         new = new->next;
-        *new = (t_path){ft_strdup(path->name), NULL};
+        *new = (t_path){ft_strdup(path->name), NULL, NULL, NULL};
         path = path->next;
     }
     return (first);
 }
 
-void    print_right_path(t_path *path, int i)
+void    print_right_path(t_path *path)
 {
     while (path)
     {
@@ -304,7 +301,7 @@ void    print_right_path(t_path *path, int i)
             printf(" - ");
         path = path->next;
     }
-    printf("\nDepth == {%d}\n", i);
+    printf("\n");
 }
 
 int     was_visited(t_path *path, char *s)
@@ -318,62 +315,207 @@ int     was_visited(t_path *path, char *s)
     return (0);
 }
 
-int     ft_solution(t_node *node, t_node *links, t_status *status, t_path *path, int i)
+void    print_answer(t_path *path, char *str)
+{
+    t_path *lst;
+
+    lst = path;
+//    print_right_path(lst);
+//    printf("[%s]\n", str);
+//    printf("SRAV\n");
+    while (str && lst)
+    {
+//        printf("SRAV2\n");
+        if (ft_strequ(str, lst->name))
+        {
+//            printf("SRAV3\n");
+            print_answer(path, lst->from);
+            printf("L%s - ", lst->name);
+        }
+        lst = lst->next;
+    }
+}
+
+//char    *the_last_of(t_path *path)
+//{
+//    while (path->next)
+//        path = path->next;
+//    return (path->name);
+//}
+
+
+//int     ft_solution(t_node *node, t_node *links, t_status *status, t_path *path, int i)
+//{
+//    if (links == NULL)
+//        return (0);
+//    ft_solution(node, links->next, status, path, i);
+////    if (was_visited(path, links->name))
+////        return (0);
+//    if (ft_strequ(links->name, status->end))
+//    {
+//        printf("The ANSWER is :  ");
+//        print_answer(path, the_last_of(path));
+//        printf("L%s\n", links->name);
+////        print_right_path(path, i);
+////        printf("Exit function with value {%d}\n", i);
+//        return (i);
+//    }
+//    return (0);
+//}
+
+int     add_right_path(t_status *status, t_path *was_here)
+{
+    t_path *lst;
+
+    lst = status->ans;
+//    printf("SRAV\n");
+//    print_right_path(was_here);
+//    printf()
+    if (status->ans == NULL)
+    {
+        status->ans = was_here;
+        return (0);
+    }
+    while (lst->ways)
+        lst = lst->ways;
+    lst->ways = was_here;
+//    print_right_path(ans);
+    return (1);
+}
+
+t_path     *ft_solution(t_node *node, t_node *links, t_status *status, t_path *path)
 {
     t_path *was_here;
 
-
     if (links == NULL)
-    {
-//        printf("Room is NULL\n");
-        return (0);
-    }
-
-//    printf("Checking room {%s} in depth {%d}\n", links->name, i);
+        return (NULL);
+    ft_solution(node, links->next, status, path);
+//    printf("Checking room {%s}\n", links->name);
     if (was_visited(path, links->name))
-    {
-//        printf("Room was visited\n");
-        ft_solution(node, links->next, status, path, i);
-        return (0);
-    }
+        return (NULL);
     was_here = copy_path(path);
-    add_curent_visit(was_here, links->name);
-//    print_right_path(was_here, i);
+    add_curent_visit(was_here, links->name, links->name);
+//    print_right_path(was_here);
     if (ft_strequ(links->name, status->end))
     {
-        printf("The answer is :\n");
-        print_right_path(was_here, i);
+//        printf("The ANSWER is :  ");
+        add_right_path(status, was_here);
+//        print_right_path(was_here);
 //        printf("Exit function with value {%d}\n", i);
-//        return (i);
+        return (NULL);
     }
-   if (ft_solution(node, links->next, status, path, i))
-        ft_solution(node, (check_name(node, links->name))->link, status, was_here, i + 1);
-    return (i);
+    ft_solution(node, (check_name(node, links->name))->link, status, was_here);
+    return (NULL);
 }
+
+//t_path      *queue_mngr(t_path *queue)
+//{
+//    t_path *lst;
+//
+//    lst = queue->next;
+//    ft_strdel(&(queue->name));
+//    ft_strdel(&(queue->from));
+//    ft_memdel((void **)(&queue));
+//    return (lst);
+//}
+
+//void        go_v_shir(t_node *node, t_status *status)
+//{
+//    t_node *links;
+//    t_node *lst;
+//    t_path  *queue;
+//    t_path  *visited;
+////    int i;
+//
+////    i = 0;
+//    queue = (t_path *)malloc(sizeof(t_path));
+//    visited = (t_path *)malloc(sizeof(t_path));
+//    *visited = (t_path){ft_strdup(status->start), NULL, NULL};
+//    *queue = (t_path){ft_strdup(status->start), NULL, NULL};
+//    while (queue)
+//    {
+////        if (ft_strequ(queue->name, status->start))
+////            queue = queue_mngr(queue);
+//        printf("Checking room {%s}\n", queue->name);
+////        printf("The QUEUE == ");
+////        print_right_path(queue);
+////        printf("The VISITED == ");
+////        print_right_path(visited);
+//        links = (check_name(node, queue->name)->link);
+//        if (!ft_strequ(queue->name, status->end))
+//            ft_solution(node, links, status, visited, 1);
+//        lst = links;
+//        while (lst)
+//        {
+//            if (!was_visited(visited, lst->name) && !was_visited(queue, lst->name)
+//                && !ft_strequ(lst->name, status->end))
+//                add_curent_visit(queue, lst->name, queue->name);
+//            lst = lst->next;
+//        }
+//        queue = queue_mngr(queue);
+//        if (queue && !was_visited(visited, queue->name))
+//            add_curent_visit(visited, queue->name, queue->from);
+//    }
+//}
+
+//int    ft_solution2(t_node *node, t_node *links, t_status *status, t_path *path)
+//{
+//    t_path *was_here;
+//
+//    if (links == NULL)
+//        return (0);
+//
+//    ft_solution2(node, links->next, status, path);
+//    if (was_visited(path, links->name))
+//    {
+////        printf("Room {%s} was visited\n", links->name);
+////        ft_solution(node, links->next, status, path, i);
+//        return (0);
+//    }
+//    was_here = copy_path(path);
+//    add_curent_visit(was_here, links->name, links->name);
+//    if (ft_strequ(links->name, status->end))
+//    {
+//        printf("The ANSWER is :  ");
+//        print_right_path(was_here);
+//        return (1);
+//    }
+//    ft_solution2(node, (check_name(node, links->name))->link, status, was_here);
+//    return (0);
+//}
+
 
 int     main(void)
 {
     t_status    *status;
     t_node      *node;
     t_path      *path;
+    t_path      *lst;
     char        *line;
-//    char        **arr;
-//    int i = 0;
 
     line = NULL;
-//    path = NULL;
+//    ans = NULL;
     status = (t_status *)malloc(sizeof(t_status));
     *status = (t_status){0, 0, 0, 0, 0, NULL, NULL};
     node = (t_node *)malloc(sizeof(t_node));
     *node = (t_node){NULL, 0, 0, NULL, NULL};
-    path = (t_path *)malloc(sizeof(t_path));
     if (ft_validator(status, node, line, 0)) {
         ft_print_lists(node, status);
         printf("START == %s\nEND == %s\n", status->start, status->end);
         printf("Good\n");
     }
-//    *path = (t_path){NULL, NULL, NULL};
-    *path = (t_path){ft_strdup(status->start), NULL};
-    ft_solution(node, (check_name(node, status->start))->link, status, path, 1);
+//    go_v_shir(node, status);
+    path = (t_path *)malloc(sizeof(t_path));
+//    ans = (t_path *)malloc(sizeof(t_path));
+    *path = (t_path){ft_strdup(status->start), NULL, NULL, NULL};
+    ft_solution(node, (check_name(node, status->start))->link, status, path);
+//    ft_solution2(node, (check_name(node, status->start))->link, status, path);
+    lst = status->ans;
+    while (lst)
+    {
+//        printf("SRAV\n");
+        print_right_path(lst);
+        lst = lst->ways;
+    }
     return (0);
 }
