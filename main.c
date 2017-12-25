@@ -297,6 +297,7 @@ void    print_right_path(t_path *path)
     while (path)
     {
         printf("L%s", path->name);
+        printf("{%s}", path->from);
         if (path->next)
             printf(" - ");
         path = path->next;
@@ -512,25 +513,25 @@ int     get_path_length(t_path *lst)
     return (i);
 }
 
-t_path  *find_shortest(t_path * lst)
-{
-    int len;
-    int cur;
-    t_path *shortest;
-
-    cur = get_path_length(lst);
-    while(lst)
-    {
-        len = get_path_length(lst);
-        if (len < cur)
-        {
-            cur = len;
-            shortest = lst;
-        }
-        lst = lst->ways;
-    }
-    return (shortest);
-}
+//t_path  *find_shortest(t_path * lst)
+//{
+//    int len;
+//    int cur;
+//    t_path *shortest;
+//
+//    cur = get_path_length(lst);
+//    while(lst)
+//    {
+//        len = get_path_length(lst);
+//        if (len < cur)
+//        {
+//            cur = len;
+//            shortest = lst;
+//        }
+//        lst = lst->ways;
+//    }
+//    return (shortest);
+//}
 
 int     path_is_unique(t_path * lst, t_path *cmpr)
 {
@@ -575,32 +576,126 @@ t_path  *find_another_shortest(t_path * lst, t_path *cmpr)
 void    get_unique_paths(t_status *status, int max_start, int max_end)
 {
     int max_path;
-//    int len;
-//    int cur;
     t_path *shortest;
-    t_path *another;
-    
     t_path *lst;
 
     max_path = (max_start >= max_end ? max_end : max_start);
     printf("{%d} | {%d} | {%d}\n", max_start, max_end, max_path);
     lst = status->ans;
-//    cur = get_path_length(lst);
     status->ans = NULL;
     shortest = NULL;
-//    shortest = find_another_shortest(lst, NULL);
-//    another = find_another_shortest(lst, shortest);
     while(max_path--)
     {
         add_right_path(status, find_another_shortest(lst, shortest));
         shortest = status->ans;
     }
-//    if (shortest)
-//        print_right_path(shortest);
-//    if (another)
-//        print_right_path(another);
 }
 
+t_path  *create_ants_list(int num, char *s)
+{
+    t_path *ants;
+    t_path *lst;
+    int i;
+
+    i = 1;
+    printf("The ants list is:   ");
+    ants = (t_path *)malloc(sizeof(t_path));
+    *ants = (t_path){ft_itoa(i++), ft_strdup(s), NULL, NULL};
+    lst = ants;
+    num -= 1;
+    while (num--)
+    {
+//        printf("SRAV\n");
+        ants->next = (t_path *)malloc(sizeof(t_path));
+//        if (i == 1)
+//            lst = ants;
+        ants = ants->next;
+        *ants = (t_path){ft_itoa(i), ft_strdup(s), NULL, NULL};
+//        printf("{%s}\n", ants->name);
+//        printf("adrs == %p | %p\n", ants, lst);
+
+//        printf("adrs2 == %p | %p\n", ants, lst);
+
+        i++;
+    }
+    return (lst);
+}
+
+t_path     *they_are_all_there(t_path *ants, char *s)
+{
+    while (ants)
+    {
+        if (ft_strequ(ants->from, s))
+            ants = ants->next;
+        else
+            return (ants);
+    }
+    return (NULL);
+}
+
+t_path    *find_current(t_path *lst, char *s)
+{
+    t_path *backup;
+    t_path *lst2;
+
+    backup = lst;
+    while (lst)
+    {
+        lst2 = lst;
+        while (lst2)
+        {
+            if (ft_strequ(lst2->from, s))
+                return (lst2);
+            else
+                lst2 = lst2->next;
+        }
+        lst = lst->ways;
+    }
+    return (backup);
+}
+
+void    set_ant_move(t_path *lst, t_path *curnt, char *end)
+{
+    t_path *cur;
+
+    cur = find_current(lst, curnt->name);
+    if (cur->next && cur->next->from == NULL) {
+        cur->from = NULL;
+        if (!ft_strequ(cur->next->name, end))
+            cur->next->from = curnt->name;
+        curnt->from = cur->next->name;
+        printf("L%s-%s ", curnt->name, curnt->from);
+    }
+    else if (lst->ways && cur->next && cur->next->from != NULL)
+        set_ant_move(lst->ways, curnt, end);
+}
+
+void    print_final_output(t_status *status)
+{
+    t_path *ants;
+    t_path *curnt;
+    t_path *lst;
+//    t_path *lst2;
+
+    ants = create_ants_list(status->ant_num, status->start);
+    print_right_path(ants);
+
+//    lst = status->ans;
+    while (they_are_all_there(ants, status->end))
+    {
+//        printf("SRAV\n");
+        lst = status->ans;
+        curnt = ants;
+//        curnt = they_are_all_there(ants, status->end);
+        while (curnt)
+        {
+            if (!ft_strequ(curnt->from, status->end))
+                set_ant_move(lst, curnt, status->end);
+            curnt = curnt->next;
+        }
+        printf("\n");
+    }
+}
 
 int     main(void)
 {
@@ -639,9 +734,9 @@ int     main(void)
     lst = status->ans;
     while (lst)
     {
-//        printf("SRAV\n");
         print_right_path(lst);
         lst = lst->ways;
     }
+    print_final_output(status);
     return (0);
 }
