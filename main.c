@@ -12,8 +12,6 @@ void    ft_print_lists(t_node *node, t_status *status)
             lst = node->link;
             printf("A room is linked with this rooms:\n");
         }
-//        else
-//            printf("Links are empty\n");
         while (lst != NULL)
         {
             printf("%30s\n", lst->name);
@@ -605,17 +603,9 @@ t_path  *create_ants_list(int num, char *s)
     num -= 1;
     while (num--)
     {
-//        printf("SRAV\n");
         ants->next = (t_path *)malloc(sizeof(t_path));
-//        if (i == 1)
-//            lst = ants;
         ants = ants->next;
         *ants = (t_path){ft_itoa(i), ft_strdup(s), NULL, NULL};
-//        printf("{%s}\n", ants->name);
-//        printf("adrs == %p | %p\n", ants, lst);
-
-//        printf("adrs2 == %p | %p\n", ants, lst);
-
         i++;
     }
     return (lst);

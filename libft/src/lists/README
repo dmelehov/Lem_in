@@ -1,0 +1,72 @@
+	
+
+
+	- init(t_mylist *v_this, void (*v_funct_destroy)(void *data))
+	  /* This function initialize t_mylist */
+
+	- empty(const t_mylist *v_this)
+	  /* This function return true if list is empty */
+
+	- size(const t_mylist *v_this)
+	  /* This function return size of list */
+
+	- begin(const t_mylist *v_this)
+	  /* This function return begin of list */
+
+	- end(const t_mylist *v_this)
+	  /* This function return end of list */
+
+	- erase(t_mylist *v_this, t_mylist_cell *cell, void **data)
+	  /* This function remove cell to list and put element in data */
+
+	- get_cell(t_mylist *list, ui cell_at)
+	  /* This function get one cell specified by his position */
+
+	- delete(t_mylist *v_this, t_mylist_cell *delete)
+	  /* This function delete cellule and call funct_destroy for data */
+
+	- print_addr(const t_mylist *v_this)
+	  /* This function print addr of lot of cellule */
+
+	- push_back(t_mylist *v_this, void *data)
+	  /* This function push data at the end */
+
+	- pop_back(t_mylist *v_this)
+	  /* This function delete last data */
+
+	- push_front(t_mylist *v_this, void *data)
+	  /* This function push data at the begin */
+
+	- pop_front(t_mylist *v_this)
+	  /* This function delete first data */
+
+	- insert(t_mylist *v_this, t_mylist_cell *position, void *data)
+	  /* This function insert data before the cell at the specified position */
+
+	- back(t_mylist *v_this)
+	  /* This function return last data */
+
+	- front(t_mylist *v_this)
+	  /* This function return the first data */
+
+	- split(t_mylist *v_this, t_mylist_cell *split_at, t_mylist *new_list)
+	  /* This function split a list in 2 part and assign the new part to new_list since split_at */
+
+	- foreach(t_mylist *v_this, bool (*funct)(void *value))
+	  /* This function apply funct for all the element until funct return false or we reach the end of the list */
+
+	- reverse(t_mylist *v_this)
+	  /* This function reverse list */
+
+	- splice(t_mylist *v_this, t_mylist_cell *position,
+			 t_mylist *other_list, t_mylist_interval *other_interval);
+	  /* This function transfers elements from other_list to v_this before position */
+
+	- delete_if(t_mylist *v_this, bool (*cmp)(void *data, void *value), void *value)
+	  /* This function delete element if cmp return true */
+
+	- clear(t_mylist *v_this)
+	  /* This function remove all elements */
+
+	- destroy(t_mylist *v_this)
+	  /* This function free list */

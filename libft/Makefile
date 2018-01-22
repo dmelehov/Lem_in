@@ -5,33 +5,22 @@
 #                                                     +:+ +:+         +:+      #
 #    By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/12/20 16:33:57 by dmelehov          #+#    #+#              #
-#    Updated: 2017/10/20 12:58:38 by dmelehov         ###   ########.fr        #
+#    Created: 2017/12/28 19:16:03 by dmelehov          #+#    #+#              #
+#    Updated: 2018/01/05 12:04:19 by dmelehov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # ==== Editable ====
 NAME:= libft.a
-
-FILES:= ft_atoi ft_bzero ft_isalnum ft_isalpha ft_isascii ft_isdigit \
-	ft_isprint ft_itoa ft_memalloc ft_memccpy ft_memchr ft_memcmp \
-	ft_memcpy ft_memdel ft_memmove ft_memset ft_putchar ft_putchar_fd \
-	ft_putendl ft_putendl_fd ft_putnbr ft_putnbr_fd ft_putstr ft_putstr_fd \
-	ft_strcat ft_strchr ft_strclr ft_strcmp ft_strcpy ft_strdel ft_strdup \
-	ft_strequ ft_striter ft_striteri ft_strjoin ft_strlcat ft_strlen \
-	ft_strmap ft_strmapi ft_strncat ft_strncmp ft_strncpy ft_strnequ \
-	ft_strnew ft_strnstr ft_strrchr ft_strsplit ft_strstr ft_strsub \
-	ft_strtrim ft_tolower ft_toupper ft_lstnew ft_lstadd ft_lstiter \
-	ft_lstdelone ft_lstdel ft_lstmap ft_realloc get_next_line
-
 # ==================
 
 # ==== Standard ====
-CC:=gcc
-CCHPATH:=cache/
-SRCPATH:=src/
-HDRPATH:=includes/
-CFLAGS:=-Wall -Wextra -Werror -I $(HDRPATH)
+CC:= gcc
+CFLAGS:= -Wall -Wextra -Werror
+SRC_DIR:= ./src/*/src/
+OBJ_DIR:= ./obj/
+INC_DIR:= ./includes/
+COD:= .cache_exists
 # ==================
 
 # ===== Colors =====
@@ -44,43 +33,41 @@ PURPLE:="\033[1;36m"
 WHITE:="\033[1;37m"
 # ==================
 
-# ====== Auto ======
-SRC:=$(addprefix $(SRCPATH),$(addsuffix .c,$(FILES)))
-OBJ:=$(addprefix $(CCHPATH),$(addsuffix .o,$(FILES)))
+# ===== Auto =======
+SRC:= $(wildcard ./src/*/src/*.c)
+OBJ:= $(addprefix $(OBJ_DIR), $(notdir $(SRC:.c=.o)))
 # ==================
- 
-CCHF:=.cache_exists
-# MAKEFLAGS+=-j
 
+# ===== Rules ======
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@echo $(END)
-	@echo $(CYAN) " - Compiling $@" $(RED)
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
-	@echo $(GREEN) " - Done" $(END)
+	@echo $(GREEN) "\n- $@ is ready to serve, my Lord" $(END)
 
-$(CCHPATH)%.o: $(SRCPATH)%.c | $(CCHF)
-	@echo ".\c"
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(COD)
+	@echo $(PURPLE)"#\c"$(END)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-# %.c:
-# 	@echo $(RED) "Missing file : $@" $(END)
-
-$(CCHF):
-	@mkdir -p $(CCHPATH)
-	@touch $(CCHF)
+$(COD):
+	@mkdir -p $(OBJ_DIR)
+	@touch $(COD)
 
 clean:
-	@rm -rf $(CCHPATH)
-	@rm -f $(CCHF)
+	@rm -rf $(OBJ_DIR)
+	@rm -rf $(COD)
 
 fclean: clean
-	@rm -f $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean
 	@$(MAKE) all
 
-test:
-	@echo "Files :" $(FILES)
+norm:
+	@echo $(RED)
+	@norminette $(SRC) | grep -v Norme -B1 || true
+	@echo $(END)
+
+.PHONY: all clean fclean re test norme
+# ==================
