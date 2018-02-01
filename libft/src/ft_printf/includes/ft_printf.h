@@ -6,7 +6,7 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:04:31 by dmelehov          #+#    #+#             */
-/*   Updated: 2017/12/29 13:29:28 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/01/31 19:47:41 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,6 @@ void			ft_apply_star(va_list *ap, t_argdata *data);
 */
 
 int				ft_check_color(char *format, char **s, int *ans);
-char			**ft_get_color(void);
-char			**ft_match_color(void);
 void			ft_free_struct(t_argdata *data);
 
 /*

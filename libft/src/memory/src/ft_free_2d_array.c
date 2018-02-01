@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_error_mngr.c                                    :+:      :+:    :+:   */
+/*   ft_free_2d_array.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/17 15:33:00 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/31 20:57:17 by dmelehov         ###   ########.fr       */
+/*   Created: 2018/01/30 15:25:41 by dmelehov          #+#    #+#             */
+/*   Updated: 2018/01/30 15:37:36 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/libft.h"
 
-void	ft_debug_error_mngr(int er_code, char *error_msg)
+void	ft_free_2d_array(void **data)
 {
-	if (er_code == 1)
-	{
-		ft_printf("{red}");
-		ft_putendl_fd(error_msg, 2);
-		ft_printf("{eoc}");
-		exit(-1);
-	}
-	else
-		M_ERROR(-1, "ERROR");
-}
+	size_t	i;
+	char	**arr;
 
-void	ft_error_mngr(int num, char *error_msg)
-{
-	ft_putendl_fd(error_msg, 1);
-	exit(num);
+	i = 0;
+	arr = (char **)data;
+	if (arr == NULL)
+		return ;
+	while (arr[i])
+	{
+		ft_strdel(&(arr[i]));
+		i++;
+	}
+	free(arr);
 }

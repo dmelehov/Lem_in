@@ -6,7 +6,7 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:22:22 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/17 20:35:50 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/01/28 16:55:38 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ void				ft_list_pop_front(t_mylist *v_this);
 **	ft_mylist_operator.c
 */
 
+bool				ft_list_foreach_if(t_mylist *v_this,
+							bool (*cmp)(void *data, void *value), void *value);
 bool				ft_list_foreach(t_mylist *v_this,
 							bool (*funct)(void *value));
 void				ft_list_reverse(t_mylist *v_this);

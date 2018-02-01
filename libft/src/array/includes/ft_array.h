@@ -6,7 +6,7 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/16 19:14:54 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/17 17:21:13 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/01/25 17:24:36 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void			ft_array_destroy(t_array *v_this);
 */
 
 bool			ft_array_foreach(t_array *v_this, bool (*funct)(void *data));
+bool			ft_array_foreach_if(t_array *v_this,
+					bool (*cmp)(void *data, void *value), void *value);
 
 /*
 **	ft_array_modifyer.c

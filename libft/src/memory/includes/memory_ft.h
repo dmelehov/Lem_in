@@ -6,7 +6,7 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/29 11:25:08 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/17 21:00:10 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/01/30 15:39:56 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,11 @@ void					*ft_realloc_s(void *ptr, size_t nbr, size_t size);
 */
 
 void					ft_free_s(void **ptr);
+
+/*
+** free 2d array
+*/
+
+void					ft_free_2d_array(void **data);
 
 #endif

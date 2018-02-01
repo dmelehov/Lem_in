@@ -6,11 +6,26 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 20:25:46 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/17 20:56:41 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/01/30 20:59:02 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/libft.h"
+
+bool			ft_list_foreach_if(t_mylist *v_this,
+					bool (*cmp)(void *data, void *value), void *value)
+{
+	t_mylist_cell	*cur;
+
+	cur = v_this->v_begin;
+	while (cur != NULL)
+	{
+		if (cmp(cur->v_data, value) == false)
+			return (false);
+		cur = cur->v_next;
+	}
+	return (true);
+}
 
 bool			ft_list_foreach(t_mylist *v_this, bool (*funct)(void *data))
 {

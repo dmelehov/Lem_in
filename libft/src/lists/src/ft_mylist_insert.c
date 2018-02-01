@@ -6,13 +6,13 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 20:14:01 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/17 20:56:52 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/01/28 16:10:40 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/libft.h"
 
-t_mylist_cell	*f_list_insert(t_mylist *v_this,
+t_mylist_cell	*ft_list_insert(t_mylist *v_this,
 				t_mylist_cell *position, void *data)
 {
 	t_mylist_cell	*cell;
