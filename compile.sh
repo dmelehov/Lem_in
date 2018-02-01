@@ -1,1 +1,0 @@
-gcc -o lem_in main_list_test.c libft/libft.a validator01.c
