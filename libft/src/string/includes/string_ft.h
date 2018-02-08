@@ -6,7 +6,7 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/28 19:57:19 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/05 19:54:40 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/02/01 15:57:06 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@
 */
 
 int						ft_atoi(const char *str);
+
+/*
+** convert a digit passed as a string to long long integer
+*/
+
+intmax_t				ft_latoi(const char *str);
 
 /*
 ** convert an integer value to a string

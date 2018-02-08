@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_latoi.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/01 17:07:59 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/02/01 15:53:33 by dmelehov         ###   ########.fr       */
+/*   Created: 2018/02/01 15:54:40 by dmelehov          #+#    #+#             */
+/*   Updated: 2018/02/01 15:56:13 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/libft.h"
 #define SKIPCHAR "\t\v\n\r\f "
 
-int		ft_atoi(const char *str)
+intmax_t	ft_latoi(const char *str)
 {
-	size_t	i;
-	int		nb;
-	int		neg;
+	size_t		i;
+	intmax_t	nb;
+	int			neg;
 
 	i = 0;
 	nb = 0;

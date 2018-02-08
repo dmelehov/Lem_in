@@ -6,7 +6,7 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 14:55:11 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/02/01 12:52:54 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/02/08 10:51:34 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,11 @@ void		check_struct_fullness(t_status *status)
 
 	cur = NULL;
 	if (status->cur_input_type != 5)
-		D_ERROR(ERC, "No links on input");
+		D_ERROR(ERC, "Wrong input sequence");
 	cur = (D_LIST(find)(status->node, check_name, status->end))->v_data;
 	if (cur->link == NULL)
 		D_ERROR(ERC, "No links with end");
 	cur = (D_LIST(find)(status->node, check_name, status->start))->v_data;
 	if (cur->link == NULL)
 		D_ERROR(ERC, "No links with start");
-	
 }

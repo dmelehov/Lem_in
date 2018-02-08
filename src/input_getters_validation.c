@@ -6,17 +6,21 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/18 18:29:51 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/30 18:16:29 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/02/08 11:34:15 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lemin.h"
 
+#define SKIPCHAR "0\t\v\n\r\f "
+
 int					ft_get_ants_num(char *line, t_status *status)
 {
+	while (ft_strchr(SKIPCHAR, (*line)))
+		line++;
 	status->ant_num = check_num_str(line, ERC);
 	if (status->ant_num <= 0)
-		D_ERROR(ERC, "Ant quantity must be a digit only");
+		D_ERROR(ERC, "Ant quantity must be an integer only");
 	return (1);
 }
 
@@ -49,13 +53,16 @@ void				ft_add_a_link(t_status *status, char *from, char *to)
 
 	lst = NULL;
 	if (!(lst = D_LIST(find)(status->node, check_name, from)))
-		D_ERROR(ERC, "Padstava!!!");
+		D_ERROR(ERC, "Padstava!!!No room with name from link");
 	if (((t_node *)lst->v_data)->link == NULL)
 	{
 		((t_node *)lst->v_data)->link = (t_array *)malloc(sizeof(t_array));
 		D_ARRAY(init)(((t_node *)lst->v_data)->link,
 			NULL, NULL, sizeof(t_array));
 	}
+	else if (!D_ARRAY(foreach_if)(((t_node *)lst->v_data)->link,
+			check_name2, to))
+		D_ERROR(ERC, "Duplicated links");
 	D_ARRAY(push_back)(((t_node *)lst->v_data)->link, to);
 }
 
@@ -81,3 +88,5 @@ int					ft_get_links_data(char **s, t_status *status)
 	ft_free_2d_array((void**)s);
 	return (5);
 }
+
+#undef SKIPCHAR

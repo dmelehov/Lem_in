@@ -6,7 +6,7 @@
 #    By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/16 17:19:14 by dmelehov          #+#    #+#              #
-#    Updated: 2018/01/31 21:05:42 by dmelehov         ###   ########.fr        #
+#    Updated: 2018/02/08 10:52:13 by dmelehov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,12 +52,12 @@ OBJ:= $(addprefix $(OBJ_DIR), $(notdir $(SRC:.c=.o)))
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ)
-	@$(CC) -g $(OBJ) $(LIBFT_FLAGS) -o $(NAME)
+	@$(CC) -g $(OBJ) $(CFLAGS) $(LIBFT_FLAGS) -o $(NAME)
 	@echo $(GREEN) "\n- $@ is ready :)" $(END)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
-	@$(CC) -c $< -o $@ $(CC_FLAGS) $(HEADER_FLAGS)
+	@$(CC) -c $< -o $@ $(CFLAGS) $(HEADER_FLAGS)
 
 $(LIBFT):
 	@make -C $(LIBFT_DIR)	

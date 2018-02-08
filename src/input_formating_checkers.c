@@ -6,7 +6,7 @@
 /*   By: dmelehov <dmelehov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:24:18 by dmelehov          #+#    #+#             */
-/*   Updated: 2018/01/31 08:57:33 by dmelehov         ###   ########.fr       */
+/*   Updated: 2018/02/08 11:26:17 by dmelehov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,17 @@ int		check_delimeters(char const *s, char c)
 
 int		check_num_str(char *line, int erc)
 {
-	int i;
-	int res;
+	int			i;
+	int			res;
+	intmax_t	t;
 
 	i = 0;
 	res = 0;
+	if (ft_strlen(line) > 10)
+		D_ERROR(erc, "Ant quantity must be an integer only");
+	t = ft_latoi(line);
+	if (t >= 2147483647)
+		D_ERROR(erc, "Ant quantity must be an integer only");
 	while (line[i])
 	{
 		if (ft_isdigit(line[i]))
